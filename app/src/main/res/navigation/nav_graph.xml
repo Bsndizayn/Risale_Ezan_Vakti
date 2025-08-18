@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/locationSelectionFragment">
+
+    <fragment
+        android:id="@+id/locationSelectionFragment"
+        android:name="com.example.risaleezanvakti.ui.location.LocationSelectionFragment"
+        android:label="Konum Seçimi"
+        tools:layout="@layout/fragment_location_selection" >
+
+        <action
+            android:id="@+id/action_locationSelectionFragment_to_prayerTimesFragment"
+            app:destination="@id/prayerTimesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/prayerTimesFragment"
+        android:name="com.example.risaleezanvakti.ui.main.PrayerTimesFragment"
+        android:label="Namaz Vakitleri"
+        tools:layout="@layout/fragment_prayer_times" >
+
+        <action
+            android:id="@+id/action_prayerTimesFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+
+        <action
+            android:id="@+id/action_prayerTimesFragment_to_qiblaFragment"
+            app:destination="@id/qiblaFragment" />
+
+        <action
+            android:id="@+id/action_prayerTimesFragment_to_tasbeehFragment"
+            app:destination="@id/tasbeehFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.risaleezanvakti.ui.settings.SettingsFragment"
+        android:label="Ayarlar"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/qiblaFragment"
+        android:name="com.example.risaleezanvakti.ui.qibla.QiblaFragment"
+        android:label="Kıble"
+        tools:layout="@layout/fragment_qibla" />
+
+    <fragment
+        android:id="@+id/tasbeehFragment"
+        android:name="com.example.risaleezanvakti.ui.tasbeeh.TasbeehFragment"
+        android:label="Tesbihat"
+        tools:layout="@layout/fragment_tasbeeh" />
+
+</navigation>
