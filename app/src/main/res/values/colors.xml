@@ -11,4 +11,5 @@
     <color name="maroon">#800000</color>
     <color name="orange">#FFA500</color>
     <color name="green">#008000</color>
+    <color name="titleTextColor">#61010B</color>
 </resources>

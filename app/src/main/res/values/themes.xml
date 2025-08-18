@@ -1,9 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.RisaleEzanVakti" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
-
-    <style name="Theme.RisaleEzanVakti" parent="Base.Theme.RisaleEzanVakti" />
+    <style name="Theme.RisaleEzanVakti" parent="Theme.Material3.DayNight.NoActionBar">
+    <item name="colorPrimary">@color/titleTextColor</item>
+    <item name="colorSecondary">@color/titleTextColor</item>
+    <item name="colorPrimaryContainer">@color/titleTextColor</item>
+</style>
 </resources>
