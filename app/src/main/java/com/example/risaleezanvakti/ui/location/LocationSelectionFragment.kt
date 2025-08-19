@@ -23,6 +23,7 @@ import com.example.risaleezanvakti.data.repository.LocationRepository
 import com.example.risaleezanvakti.databinding.FragmentLocationSelectionBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.example.risaleezanvakti.R
 
 class LocationSelectionFragment : Fragment() {
 
@@ -36,7 +37,8 @@ class LocationSelectionFragment : Fragment() {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            ) {
                 findDeviceLocation()
             } else {
                 Toast.makeText(requireContext(), "Konum izni olmadan otomatik konum bulunamaz.", Toast.LENGTH_SHORT).show()
@@ -63,19 +65,24 @@ class LocationSelectionFragment : Fragment() {
         viewModel.countries.observe(viewLifecycleOwner) { countriesList ->
             val mutableList = countriesList.toMutableList()
             val turkeyIndex = mutableList.indexOfFirst {
-                it.name.equals("Türkiye", ignoreCase = true) || it.name.equals("Turkey", ignoreCase = true)
+                it.name.equals("Turkey", ignoreCase = true) || it.name.equals("Türkiye", ignoreCase = true)
             }
             if (turkeyIndex != -1) {
                 val turkey = mutableList[turkeyIndex]
                 mutableList.removeAt(turkeyIndex)
                 mutableList.add(0, turkey)
             }
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, mutableList.map { it.name })
+
+            val displayList = mutableList.map { country ->
+                if (country.name.equals("Turkey", ignoreCase = true)) "Türkiye" else country.name
+            }
+
+            val adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_item, displayList)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerCountries.adapter = adapter
 
             nearbyPlace?.country?.let { country ->
-                val pos = mutableList.indexOfFirst { it.name.equals(country, ignoreCase = true) }
+                val pos = displayList.indexOfFirst { it.equals(country, ignoreCase = true) || it.equals("Türkiye", ignoreCase = true) }
                 if (pos != -1) {
                     isProgrammaticSelection = true
                     binding.spinnerCountries.setSelection(pos)
@@ -84,7 +91,7 @@ class LocationSelectionFragment : Fragment() {
         }
 
         viewModel.regions.observe(viewLifecycleOwner) { regionsList ->
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, regionsList)
+            val adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_item, regionsList)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerRegions.adapter = adapter
             nearbyPlace?.region?.let { region ->
@@ -97,7 +104,7 @@ class LocationSelectionFragment : Fragment() {
         }
 
         viewModel.cities.observe(viewLifecycleOwner) { citiesList ->
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, citiesList)
+            val adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_item, citiesList)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerCities.adapter = adapter
             nearbyPlace?.city?.let { city ->
@@ -112,7 +119,7 @@ class LocationSelectionFragment : Fragment() {
             if (placesList.isNotEmpty() && !placesList[0].country.isNullOrEmpty() && !placesList[0].region.isNullOrEmpty() && !placesList[0].city.isNullOrEmpty()) {
                 val place = placesList[0]
                 nearbyPlace = place
-                val locationText = "${place.city}, ${place.region}, ${place.country}"
+                val locationText = "${place.city}, ${place.region}, ${if (place.country.equals("Turkey", ignoreCase = true)) "Türkiye" else place.country}"
                 binding.textViewDetectedLocation.text = "Konumunuz: $locationText "
                 binding.spinnerCountries.visibility = View.GONE
                 binding.spinnerRegions.visibility = View.GONE
@@ -128,13 +135,16 @@ class LocationSelectionFragment : Fragment() {
         binding.spinnerCountries.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (!isProgrammaticSelection) {
-                    val country = parent?.getItemAtPosition(position)?.toString()
-                    if (!country.isNullOrEmpty()) {
-                        viewModel.fetchRegions(country)
+                    var selected = parent?.getItemAtPosition(position)?.toString()
+                    // Türkiye seçildiğinde API için "Turkey" gönder
+                    if (selected.equals("Türkiye", ignoreCase = true)) selected = "Turkey"
+                    if (!selected.isNullOrEmpty()) {
+                        viewModel.fetchRegions(selected)
                     }
                 }
                 isProgrammaticSelection = false
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -142,13 +152,16 @@ class LocationSelectionFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (!isProgrammaticSelection) {
                     val country = binding.spinnerCountries.selectedItem?.toString()
+                    var apiCountry = country
+                    if (country.equals("Türkiye", ignoreCase = true)) apiCountry = "Turkey"
                     val region = parent?.getItemAtPosition(position)?.toString()
-                    if (!country.isNullOrEmpty() && !region.isNullOrEmpty()) {
-                        viewModel.fetchCities(country, region)
+                    if (!apiCountry.isNullOrEmpty() && !region.isNullOrEmpty()) {
+                        viewModel.fetchCities(apiCountry, region)
                     }
                 }
                 isProgrammaticSelection = false
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -172,7 +185,8 @@ class LocationSelectionFragment : Fragment() {
             }
 
             if (!country.isNullOrEmpty() && !region.isNullOrEmpty() && !city.isNullOrEmpty()) {
-                saveLocation(country, region, city)
+                val saveCountry = if (country.equals("Türkiye", ignoreCase = true)) "Turkey" else country
+                saveLocation(saveCountry, region, city)
                 Toast.makeText(requireContext(), "Konum kaydedildi: $city", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(requireContext(), "Lütfen geçerli bir konum seçin veya otomatik konumu deneyin.", Toast.LENGTH_SHORT).show()
