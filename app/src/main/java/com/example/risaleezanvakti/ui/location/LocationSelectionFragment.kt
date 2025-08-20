@@ -24,6 +24,7 @@ import com.example.risaleezanvakti.databinding.FragmentLocationSelectionBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.example.risaleezanvakti.R
+import androidx.navigation.fragment.findNavController
 
 class LocationSelectionFragment : Fragment() {
 
@@ -188,6 +189,8 @@ class LocationSelectionFragment : Fragment() {
                 val saveCountry = if (country.equals("Türkiye", ignoreCase = true)) "Turkey" else country
                 saveLocation(saveCountry, region, city)
                 Toast.makeText(requireContext(), "Konum kaydedildi: $city", Toast.LENGTH_SHORT).show()
+                // Konum kaydedildikten sonra bir sonraki ekrana geçiş yap
+                findNavController().navigate(R.id.action_locationSelectionFragment_to_settingsFragment)
             } else {
                 Toast.makeText(requireContext(), "Lütfen geçerli bir konum seçin veya otomatik konumu deneyin.", Toast.LENGTH_SHORT).show()
             }
