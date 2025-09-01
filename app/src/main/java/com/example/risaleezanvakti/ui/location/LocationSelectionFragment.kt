@@ -17,14 +17,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.risaleezanvakti.R
 import com.example.risaleezanvakti.data.model.Place
 import com.example.risaleezanvakti.data.remote.RetrofitClient
 import com.example.risaleezanvakti.data.repository.LocationRepository
 import com.example.risaleezanvakti.databinding.FragmentLocationSelectionBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.example.risaleezanvakti.R
-import androidx.navigation.fragment.findNavController
 
 class LocationSelectionFragment : Fragment() {
 
@@ -62,7 +62,6 @@ class LocationSelectionFragment : Fragment() {
 
         viewModel.fetchCountries()
 
-        // Ülkeleri yükle ve Türkiye’yi öne al
         viewModel.countries.observe(viewLifecycleOwner) { countriesList ->
             val mutableList = countriesList.toMutableList()
             val turkeyIndex = mutableList.indexOfFirst {
@@ -137,7 +136,6 @@ class LocationSelectionFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (!isProgrammaticSelection) {
                     var selected = parent?.getItemAtPosition(position)?.toString()
-                    // Türkiye seçildiğinde API için "Turkey" gönder
                     if (selected.equals("Türkiye", ignoreCase = true)) selected = "Turkey"
                     if (!selected.isNullOrEmpty()) {
                         viewModel.fetchRegions(selected)
@@ -171,26 +169,25 @@ class LocationSelectionFragment : Fragment() {
         }
 
         binding.buttonContinue.setOnClickListener {
-            val country: String?
-            val region: String?
-            val city: String?
+            val country: String
+            val region: String
+            val city: String
 
             if (nearbyPlace != null && !nearbyPlace?.country.isNullOrEmpty() && !nearbyPlace?.region.isNullOrEmpty() && !nearbyPlace?.city.isNullOrEmpty()) {
-                country = nearbyPlace?.country
-                region = nearbyPlace?.region
-                city = nearbyPlace?.city
+                country = nearbyPlace!!.country!!
+                region = nearbyPlace!!.region!!
+                city = nearbyPlace!!.city!!
             } else {
-                country = binding.spinnerCountries.selectedItem?.toString()
-                region = binding.spinnerRegions.selectedItem?.toString()
-                city = binding.spinnerCities.selectedItem?.toString()
+                country = binding.spinnerCountries.selectedItem?.toString() ?: ""
+                region = binding.spinnerRegions.selectedItem?.toString() ?: ""
+                city = binding.spinnerCities.selectedItem?.toString() ?: ""
             }
 
-            if (!country.isNullOrEmpty() && !region.isNullOrEmpty() && !city.isNullOrEmpty()) {
+            if (country.isNotEmpty() && region.isNotEmpty() && city.isNotEmpty()) {
                 val saveCountry = if (country.equals("Türkiye", ignoreCase = true)) "Turkey" else country
                 saveLocation(saveCountry, region, city)
                 Toast.makeText(requireContext(), "Konum kaydedildi: $city", Toast.LENGTH_SHORT).show()
-                // Konum kaydedildikten sonra bir sonraki ekrana geçiş yap
-                findNavController().navigate(R.id.action_locationSelectionFragment_to_settingsFragment)
+                findNavController().navigate(R.id.action_locationSelectionFragment_to_notificationSettingsFragment)
             } else {
                 Toast.makeText(requireContext(), "Lütfen geçerli bir konum seçin veya otomatik konumu deneyin.", Toast.LENGTH_SHORT).show()
             }

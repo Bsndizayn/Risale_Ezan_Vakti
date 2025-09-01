@@ -9,36 +9,33 @@
     android:padding="16dp"
     tools:context=".ui.location.LocationSelectionFragment">
 
-    <!-- Başlık -->
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Risale Ezan"
         android:textColor="@color/titleTextColor"
-        android:textSize="72sp"
+        android:textSize="60sp"
         android:fontFamily="@font/barla"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Otomatik Konum Bul -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonAutoDetect"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/custom_button"
         android:text="Otomatik Konum Bul"
         android:textColor="@color/white"
         android:textAllCaps="false"
-        android:padding="22dp"
+        android:padding="16dp"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Konum bilgisi -->
     <TextView
         android:id="@+id/textViewDetectedLocation"
         android:layout_width="match_parent"
@@ -46,19 +43,18 @@
         android:layout_marginTop="16dp"
         android:text="LÜTFEN KONUMUNUZU SEÇİN"
         android:textColor="@color/titleTextColor"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/buttonAutoDetect"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- İnternet uyarısı -->
     <TextView
         android:id="@+id/textViewInternetWarning"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Manuel Konum seçecekseniz internetinizi açın \nve uygumayı kapatıp açın.\nİnternetiniz açıksa aşağıdan manuel konum seçebilirsiniz"
+        android:text="Manuel Konum seçecekseniz internetinizi açın \nve uygulamayı kapatıp açın.\nİnternetiniz açıksa aşağıdan manuel konum seçebilirsiniz"
         android:textColor="@android:color/holo_red_light"
         android:textSize="10sp"
         android:textStyle=""
@@ -67,59 +63,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Spinner - Ülke -->
     <Spinner
         android:id="@+id/spinnerCountries"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/spinner_style"
-        android:padding="10dp"
+        android:padding="8dp"
         android:spinnerMode="dropdown"
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/textViewInternetWarning"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Spinner - Bölge -->
     <Spinner
         android:id="@+id/spinnerRegions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/spinner_style"
-        android:padding="10dp"
+        android:padding="8dp"
         android:spinnerMode="dropdown"
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/spinnerCountries"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Spinner - Şehir -->
     <Spinner
         android:id="@+id/spinnerCities"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/spinner_style"
-        android:padding="10dp"
+        android:padding="8dp"
         android:spinnerMode="dropdown"
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/spinnerRegions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Kaydet -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonContinue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/spinner_style"
         android:text="Kaydet"
         android:textColor="@color/white"
         android:textAllCaps="false"
-        android:padding="12dp"
+        android:padding="10dp"
         app:layout_constraintTop_toBottomOf="@+id/spinnerCities"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
